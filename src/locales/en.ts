@@ -1,0 +1,28 @@
+const en = {
+  headerTitle: 'Employee Management',
+  employeeList: 'Employee List',
+  addEmployee: 'Add New Employee',
+  deleteConfirmation: 'The selected employee record will be deleted.',
+  previous: 'Previous',
+  page: 'Page',
+  next: 'Next',
+  firstName: "First Name",
+  lastName: "Last Name",
+  dateOfEmployment: "Date Of Employment",
+  dateOfBirth: "Date Of Birth",
+  phone: "Phone",
+  email: "Email",
+  department: "Department",
+  position: "Position",
+  actions: "Actions",
+  edit: "Edit",
+  delete: "Delete",
+  editEmployee: 'Edit New Employee',
+  submit: 'Submit',
+  areYouSure: 'Are you sure?',
+  proceed: 'Proceed',
+  cancel: 'Cancel',
+  willBeDeleted: 'will be deleted',
+};
+
+export default en;

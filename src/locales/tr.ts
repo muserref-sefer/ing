@@ -1,0 +1,28 @@
+const tr = {
+  headerTitle: 'Çalışan Yönetimi',
+  employeeList: 'Çalışan Listesi',
+  addEmployee: 'Yeni Çalışan Ekle',
+  deleteConfirmation: 'Seçili çalışan kaydı silinecek.',
+  previous: 'Önceki',
+  page: 'Sayfa',
+  next: 'Sonraki',
+  firstName: "Ad",
+  lastName: "Soyad",
+  dateOfEmployment: "Çalışma Tarihi",
+  dateOfBirth: "Doğum Tarihi",
+  phone: "Telefon",
+  email: "E-posta",
+  department: "Departman",
+  position: "Pozisyon",
+  actions: "İşlemler",
+  edit: "Düzenle",
+  delete: "Sil",
+  editEmployee: 'Çalışan Düzenle',
+  submit: 'Gönder',
+  areYouSure: 'Emin misin?',
+  proceed: 'Uygula',
+  cancel: 'İptal',
+  willBeDeleted: 'silinecek',
+};
+
+export default tr;

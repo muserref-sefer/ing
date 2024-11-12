@@ -1,4 +1,4 @@
-import { LitElement, html } from 'lit';
+import { LitElement, css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { connect } from 'pwa-helpers';
 import store, { RootState } from '../store';
@@ -17,6 +17,12 @@ export class EditEmployeePage extends connect(store)(LitElement) {
     this.employee = state.employees.employees.find(emp => emp.id === this.employeeId);
     this.messages = state.language.messages;
   }
+
+  static styles = css`
+    h3 {
+      text-align: center;
+    }
+  `;
 
   render() {
     if (!this.employee) return html`<p>Employee not found</p>`;

@@ -1,4 +1,4 @@
-import { LitElement, html } from 'lit';
+import { LitElement, css, html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import store, { RootState } from '../store';
 import { addEmployee } from '../store/slices/employee/employeeSlice';
@@ -26,6 +26,12 @@ export class AddEmployeePage extends connect(store)(LitElement) {
   stateChanged(state: RootState) {
     this.messages = state.language.messages;
   }
+
+  static styles = css`
+    h3 {
+      text-align: center;
+    }
+  `;
 
   render() {
     return html`

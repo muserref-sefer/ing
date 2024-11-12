@@ -29,6 +29,9 @@ class EmployeeFormDialog extends connect(store)(LitElement) {
       display: flex;
       flex-direction: column;
       gap: 1em;
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto;
     }
 
     input[type="text"],

@@ -6,9 +6,14 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "skipLibCheck": true,
     "types": ["mocha", "chai"]
   },
-  "include": ["src/**/*", "tests/**/*"]
+  "include": ["src/**/*.ts", "tests/**/*.ts"],
+  "exclude": [
+    "node_modules/redux-persist/types/integration/react.d.ts"
+  ]
 }

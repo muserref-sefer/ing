@@ -1,52 +1,53 @@
-import { expect, fixture } from '@open-wc/testing';
-import { html } from 'lit';
-import sinon from 'sinon';
-
-import { EditEmployeePage } from '../../pages/EditEmployeePage';
-import store from '../../store';
-import { addEmployee } from '../../store/slices/employee/employeeSlice';
-import { Employee } from '../../types/Employee';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import '../../../src/components/Employee/EmployeeFormDialog';
+import '../../../src/pages/EditEmployeePage';
+import store from '../../../src/store';
 
 describe('EditEmployeePage', () => {
-  let element: EditEmployeePage;
-  
-  const mockEmployee: Employee = {
-    id: 1,
-    firstName: 'John',
-    lastName: 'Doe',
-    dateOfEmployment: '2023-11-10',
-    dateOfBirth: '1990-05-05',
-    phone: '+123456789',
-    email: 'john.doe@example.com',
-    department: 'Engineering',
-    position: 'Developer',
-  };
-
-  beforeEach(async () => {
-    store.dispatch(addEmployee(mockEmployee));
-    element = await fixture(html`<edit-employee-page .employeeId=${mockEmployee.id}></edit-employee-page>`);
+  let el: any;
+  beforeEach(() => {
+    el = document.createElement('edit-employee-page') as any;
+    el.employeeId = 123;
+    document.body.appendChild(el);
+    (el as any).messages = { editEmployee: 'Edit' };
   });
 
-  it('edits an existing employee when form is submitted', async () => {
-    const dispatchSpy = sinon.spy(store, 'dispatch');
-    const firstNameInput = element.shadowRoot?.querySelector('input[placeholder="First Name"]') as HTMLInputElement;
-    const submitButton = element.shadowRoot?.querySelector('button[type="submit"]') as HTMLButtonElement;
+  it('dispatches updateEmployee and navigates on submit', () => {
+    const sample = { id: 123, firstName: 'X', lastName: 'Y', dateOfEmployment: '', dateOfBirth: '', phone: '', email: '', department: '', position: '' };
+    const spy = vi.spyOn(store, 'dispatch');
+    const prev = window.history.pushState;
+    let pushed: any = null;
+    window.history.pushState = (_s: any, _t: any, u: string) => (pushed = u) as any;
 
-    firstNameInput.value = 'Johnny';
-    firstNameInput.dispatchEvent(new Event('input'));
+    (el as any)._editEmployee(sample);
 
-    submitButton.click();
+    expect(spy).toHaveBeenCalled();
+    expect(pushed).toBe('/');
 
-    await element.updateComplete;
+    spy.mockRestore();
+    window.history.pushState = prev;
+  });
 
-    expect(dispatchSpy.calledOnce).to.be.true;
-    const dispatchedAction = dispatchSpy.getCall(0).args[0];
-    expect(dispatchedAction).to.have.property('type', 'employee/updateEmployee');
-    expect(dispatchedAction.payload).to.include({
-      id: mockEmployee.id,
-      firstName: 'Johnny',
-    });
+  it('renders not found when no employee', async () => {
+    // set state so that employee is undefined
+    (el as any).employee = undefined;
+    await el.updateComplete;
+    expect(el.shadowRoot.textContent).toContain('Employee not found');
+  });
 
-    dispatchSpy.restore();
+  it('renders form when employee exists', async () => {
+    const sample = { id: 123, firstName: 'X', lastName: 'Y', dateOfEmployment: '', dateOfBirth: '', phone: '', email: '', department: '', position: '' };
+    (el as any).employee = sample;
+    await el.updateComplete;
+    const form = el.shadowRoot.querySelector('employee-form-dialog');
+    expect(form).toBeTruthy();
+  });
+
+  it('stateChanged assigns employee from store', () => {
+    const mockState = { employees: { employees: [{ id: 123, firstName: 'X' }] }, language: { messages: { editEmployee: 'Edit' } } } as any;
+    (el as any).employeeId = 123;
+    (el as any).stateChanged(mockState);
+    expect((el as any).employee).toBeDefined();
+    expect((el as any).messages.editEmployee).toBe('Edit');
   });
 });

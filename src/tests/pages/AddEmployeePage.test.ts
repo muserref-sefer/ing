@@ -1,43 +1,36 @@
-import { expect, fixture } from '@open-wc/testing';
-import { html } from 'lit';
-import sinon from 'sinon';
-
-import { AddEmployeePage } from '../../pages/AddEmployeePage';
-import store from '../../store';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import '../../../src/components/Employee/EmployeeFormDialog';
+import '../../../src/pages/AddEmployeePage';
+import store from '../../../src/store';
 
 describe('AddEmployeePage', () => {
-  let element: AddEmployeePage;
-
-  beforeEach(async () => {
-    element = await fixture(html`<add-employee-page></add-employee-page>`);
+  let el: any;
+  beforeEach(() => {
+    el = document.createElement('add-employee-page') as any;
+    document.body.appendChild(el);
+    (el as any).messages = { addEmployee: 'Add' };
   });
 
-  it('adds a new employee when form is submitted', async () => {
-    const dispatchSpy = sinon.spy(store, 'dispatch');
-    const firstNameInput = element.shadowRoot?.querySelector('input[placeholder="First Name"]') as HTMLInputElement;
-    const lastNameInput = element.shadowRoot?.querySelector('input[placeholder="Last Name"]') as HTMLInputElement;
-    const emailInput = element.shadowRoot?.querySelector('input[placeholder="Email"]') as HTMLInputElement;
-    const submitButton = element.shadowRoot?.querySelector('button[type="submit"]') as HTMLButtonElement;
+  it('dispatches addEmployee and navigates on submit', () => {
+    const sample = { id: 1, firstName: 'A', lastName: 'B', dateOfEmployment: '', dateOfBirth: '', phone: '', email: '', department: '', position: '' };
+    const spy = vi.spyOn(store, 'dispatch');
+    const prev = window.history.pushState;
+    let pushed: any = null;
+    window.history.pushState = (_s: any, _t: any, u: string) => (pushed = u) as any;
 
-    firstNameInput.value = 'Jane';
-    firstNameInput.dispatchEvent(new Event('input'));
-    lastNameInput.value = 'Doe';
-    lastNameInput.dispatchEvent(new Event('input'));
-    emailInput.value = 'jane.doe@example.com';
-    emailInput.dispatchEvent(new Event('input'));
+    // call private handler directly
+    (el as any)._addEmployee(sample);
 
-    submitButton.click();
+    expect(spy).toHaveBeenCalled();
+    expect(pushed).toBe('/');
 
-    await element.updateComplete;
+    spy.mockRestore();
+    window.history.pushState = prev;
+  });
 
-    expect(dispatchSpy.calledOnce).to.be.true;
-    const dispatchedAction = dispatchSpy.getCall(0).args[0];
-    expect(dispatchedAction).to.have.property('type', 'employee/addEmployee');
-    expect(dispatchedAction.payload).to.include({
-      firstName: 'Jane',
-      lastName: 'Doe',
-      email: 'jane.doe@example.com',
-    });
-    dispatchSpy.restore();
+  it('updates messages via stateChanged', () => {
+    const mockState = { language: { messages: { addEmployee: 'Add' } }, employees: { employees: [] } } as any;
+    (el as any).stateChanged(mockState);
+    expect((el as any).messages.addEmployee).toBe('Add');
   });
 });

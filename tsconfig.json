@@ -10,9 +10,13 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "skipLibCheck": true,
-    "types": ["mocha", "chai"]
+    "types": ["vitest"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts"],
+  "include": ["src/**/*.ts"],
   "exclude": [
     "node_modules/redux-persist/types/integration/react.d.ts"
   ]

@@ -29,7 +29,6 @@ describe('EditEmployeePage', () => {
   });
 
   it('renders not found when no employee', async () => {
-    // set state so that employee is undefined
     (el as any).employee = undefined;
     await el.updateComplete;
     expect(el.shadowRoot.textContent).toContain('Employee not found');

@@ -2,8 +2,6 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import '../../../../src/components/Employee/DeleteConfirmationDialog';
 import { Employee } from '../../../../src/types/Employee';
 
-// We'll import the class by reading the module - the customElement decorator registers it as a tag
-
 describe('DeleteConfirmationDialog', () => {
   let el: any;
   const sample: Employee = {
@@ -19,7 +17,6 @@ describe('DeleteConfirmationDialog', () => {
   };
 
   beforeEach(() => {
-    // create element via tag name
     el = document.createElement('delete-confirmation-dialog') as any;
     document.body.appendChild(el);
     el.employee = sample;
@@ -28,7 +25,6 @@ describe('DeleteConfirmationDialog', () => {
   it('emits proceed-delete on proceed', () => {
     let detail: any;
     el.addEventListener('proceed-delete', (e: any) => (detail = e.detail));
-    // call private method via any
     (el as any)._proceed();
     expect(detail).toEqual(sample);
     expect(el.employee).toBeUndefined();

@@ -21,12 +21,10 @@ describe('EmployeeListComponent pagination and actions', () => {
     (el as any)._updateTotalPages();
     expect((el as any).totalPages).toBe(Math.ceil(12 / (el as any).itemsPerPage));
 
-    // go next page
     (el as any).currentPage = 1;
     (el as any).nextPage();
     expect((el as any).currentPage).toBe(2);
 
-    // prev page
     (el as any).prevPage();
     expect((el as any).currentPage).toBe(1);
   });
@@ -53,9 +51,7 @@ describe('EmployeeListComponent pagination and actions', () => {
     const rows = el.shadowRoot.querySelectorAll('tbody tr');
     expect(rows.length).toBeGreaterThan(0);
 
-    // simulate edit click
     const editBtn = el.shadowRoot.querySelector('button');
-    // stub history changes by spying on window.history.pushState
     const prev = window.history.pushState;
     let pushed = null as any;
     window.history.pushState = (s: any, t: any, u: string) => (pushed = u) as any;
@@ -63,7 +59,6 @@ describe('EmployeeListComponent pagination and actions', () => {
     expect(pushed).toContain('/edit/');
     window.history.pushState = prev;
 
-    // simulate delete click (second button)
     const deleteBtn = el.shadowRoot.querySelectorAll('button')[1];
     deleteBtn.click();
     expect((el as any).employeeToDelete).toBeDefined();
@@ -79,14 +74,11 @@ describe('EmployeeListComponent pagination and actions', () => {
 
     const spy = vi.spyOn(store, 'dispatch');
 
-    // simulate proceed-delete
     dialog.dispatchEvent(new CustomEvent('proceed-delete', { detail: emp }));
     await el.updateComplete;
     expect(spy).toHaveBeenCalled();
-    // ensure employeeToDelete cleared
     expect((el as any).employeeToDelete).toBeUndefined();
 
-    // set again and test cancel
     (el as any).employeeToDelete = emp;
     await el.updateComplete;
     const dialog2 = el.shadowRoot.querySelector('delete-confirmation-dialog');
@@ -118,7 +110,7 @@ describe('EmployeeListComponent pagination and actions', () => {
     const employees = Array.from({ length: 7 }).map((_, i) => ({ id: i + 1, firstName: 'n', lastName: 'n', dateOfEmployment: '', dateOfBirth: '', phone: '', email: '', department: '', position: '' }));
     (el as any).employees = employees;
     (el as any).itemsPerPage = 3;
-    (el as any).currentPage = 3; // last page should have 1 item
+    (el as any).currentPage = 3; 
     const paged = (el as any).paginatedEmployees;
     expect(paged.length).toBe(1);
   });
